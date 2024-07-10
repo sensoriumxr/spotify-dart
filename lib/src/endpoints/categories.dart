@@ -1,10 +1,11 @@
-part of spotify;
+part of '../../spotify.dart';
 
-class Categories extends EndpointPaging {
+/// Endpoint of browsing the categories `v1/browse/categories`
+class Categories extends Browse {
   @override
-  String get _path => 'v1/browse/categories';
+  String get _path => '${super._path}/categories';
 
-  Categories(SpotifyApiBase api) : super(api);
+  Categories(super.api);
 
   /// [country] - a country: an ISO 3166-1 alpha-2 country code. Provide this
   /// parameter if you want to narrow the list of returned categories to those
@@ -21,8 +22,8 @@ class Categories extends EndpointPaging {
   /// parameter, may give odd results if not carefully matched. For example
   /// country=SE&locale=de_DE will return a list of categories relevant to
   /// Sweden but as German language strings.
-  Pages<Category> list({String? country, String? locale}) {
-    final query = _buildQuery({'country': country, 'locale': locale});
+  Pages<Category> list({Market? country, String? locale}) {
+    final query = _buildQuery({'country': country?.name, 'locale': locale});
 
     return _getPages(
       '$_path?$query',
@@ -45,8 +46,8 @@ class Categories extends EndpointPaging {
   ///
   /// [categoryId] - the Spotify category ID for the category.
   Future<Category> get(String categoryId,
-      {String? country, String? locale}) async {
-    final query = _buildQuery({'country': country, 'locale': locale});
+      {Market? country, String? locale}) async {
+    final query = _buildQuery({'country': country?.name, 'locale': locale});
 
     var jsonString = await _api._get('$_path/$categoryId?$query');
     var map = json.decode(jsonString);

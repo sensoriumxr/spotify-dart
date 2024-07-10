@@ -1,17 +1,18 @@
 // Copyright (c) 2017, rinukkusu. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a show
+@JsonSerializable()
 class Show {
   Show();
 
   /// The markets in which the show is available: ISO 3166-1 alpha-2 country
   /// codes. Note that an album is considered available in a market when at least
   /// 1 of its tracks is available in that market.
-  @JsonKey(name: 'available_markets', nullable: true)
-  List<String>? availableMarkets;
+  @JsonKey(name: 'available_markets')
+  List<Market>? availableMarkets;
 
   /// The copyright statements of the show.
   List<Copyright>? copyrights;
@@ -59,5 +60,15 @@ class Show {
   /// The Spotify URI for the show.
   String? uri;
 
+  /// The number of total episodes in this show
+  @JsonKey(
+    name: 'total_episodes',
+    defaultValue: 0,
+    fromJson: convertToIntIfDoubleValue,
+  )
+  int? totalEpisodes;
+
   factory Show.fromJson(Map<String, dynamic> json) => _$ShowFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ShowToJson(this);
 }

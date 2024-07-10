@@ -1,13 +1,17 @@
 // Copyright (c) 2017, rinukkusu. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a track
+@JsonSerializable()
 class Track extends Object implements TrackSimple {
   Track();
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$TrackToJson(this);
 
   /// The album on which the track appears. The album object includes a link
   /// in [href] to full information about the album.
@@ -22,26 +26,26 @@ class Track extends Object implements TrackSimple {
   /// their ISO 3166-1 alpha-2 code.
   @JsonKey(name: 'available_markets')
   @override
-  List<String>? availableMarkets;
+  List<Market>? availableMarkets;
 
   /// The disc number
-  /// (usually [1] unless the album consists of more than one disc)
-  @JsonKey(name: 'disc_number')
+  /// (usually `1` unless the album consists of more than one disc)
+  @JsonKey(name: 'disc_number', fromJson: convertToIntIfDoubleValue)
   @override
   int? discNumber;
 
   /// The track length in milliseconds.
-  @JsonKey(name: 'duration_ms')
+  @JsonKey(name: 'duration_ms', fromJson: convertToIntIfDoubleValue)
   @override
   int? durationMs;
 
   /// The track length
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   Duration? get duration => Duration(milliseconds: durationMs ?? 0);
 
   /// Whether or not the track has explicit lyrics
-  /// ([true] = yes it does; [false] = no it does not OR unknown).
+  /// (`true` = yes it does; `false` = no it does not OR unknown).
   @override
   bool? explicit;
 
@@ -94,9 +98,10 @@ class Track extends Object implements TrackSimple {
   /// independently. Artist and album popularity is derived mathematically from
   /// track popularity. Note that the popularity value may lag actual popularity
   /// by a few days: the value is not updated in real time.
+  @JsonKey(fromJson: convertToIntIfDoubleValue)
   int? popularity;
 
-  /// A URL to a 30 second preview (MP3 format) of the track. [null] if not
+  /// A URL to a 30 second preview (MP3 format) of the track. `null` if not
   /// available.
   @JsonKey(name: 'preview_url')
   @override
@@ -104,7 +109,7 @@ class Track extends Object implements TrackSimple {
 
   /// The number of the track. If an album has several discs, the track number
   /// is the number on the specified disc.
-  @JsonKey(name: 'track_number')
+  @JsonKey(name: 'track_number', fromJson: convertToIntIfDoubleValue)
   @override
   int? trackNumber;
 
@@ -117,12 +122,15 @@ class Track extends Object implements TrackSimple {
   String? uri;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a simplified track.
+@JsonSerializable()
 class TrackSimple extends Object {
   TrackSimple();
 
   factory TrackSimple.fromJson(Map<String, dynamic> json) =>
       _$TrackSimpleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TrackSimpleToJson(this);
 
   /// The artists who performed the track. Each artist object includes a link
   /// in [href] to more detailed information about the artist.
@@ -131,23 +139,23 @@ class TrackSimple extends Object {
   /// A list of the countries in which the track can be played, identified by
   /// their ISO 3166-1 alpha-2 code.
   @JsonKey(name: 'available_markets')
-  List<String>? availableMarkets;
+  List<Market>? availableMarkets;
 
   /// The disc number
-  /// (usually [1] unless the album consists of more than one disc)
-  @JsonKey(name: 'disc_number')
+  /// (usually `1` unless the album consists of more than one disc)
+  @JsonKey(name: 'disc_number', fromJson: convertToIntIfDoubleValue)
   int? discNumber;
 
   /// The track length in milliseconds.
-  @JsonKey(name: 'duration_ms')
+  @JsonKey(name: 'duration_ms', fromJson: convertToIntIfDoubleValue)
   int? durationMs;
 
   /// The track length
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Duration? get duration => Duration(milliseconds: durationMs ?? 0);
 
   /// Whether or not the track has explicit lyrics
-  /// ([true] = yes it does; [false] = no it does not OR unknown).
+  /// (`true` = yes it does; `false` = no it does not OR unknown).
   bool? explicit;
 
   /// Known external URLs for this track.
@@ -175,14 +183,14 @@ class TrackSimple extends Object {
   /// The name of the track.
   String? name;
 
-  /// A URL to a 30 second preview (MP3 format) of the track. [null] if not
+  /// A URL to a 30 second preview (MP3 format) of the track. `null` if not
   /// available.
   @JsonKey(name: 'preview_url')
   String? previewUrl;
 
   /// The number of the track. If an album has several discs, the track number
   /// is the number on the specified disc.
-  @JsonKey(name: 'track_number')
+  @JsonKey(name: 'track_number', fromJson: convertToIntIfDoubleValue)
   int? trackNumber;
 
   /// The object type: "track".
@@ -193,12 +201,14 @@ class TrackSimple extends Object {
 }
 
 /// A song saved in a Spotify user’s “Your Music” library
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class TrackSaved extends Object {
   TrackSaved();
 
   factory TrackSaved.fromJson(Map<String, dynamic> json) =>
       _$TrackSavedFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TrackSavedToJson(this);
 
   /// The date and time the track was saved.
   @JsonKey(name: 'added_at')
@@ -208,12 +218,14 @@ class TrackSaved extends Object {
   Track? track;
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class TrackLink extends Object {
   TrackLink();
 
   factory TrackLink.fromJson(Map<String, dynamic> json) =>
       _$TrackLinkFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TrackLinkToJson(this);
 
   /// Known external URLs for this track.
   @JsonKey(name: 'external_urls')
@@ -232,17 +244,20 @@ class TrackLink extends Object {
   String? uri;
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class TracksLink extends Object {
   TracksLink();
 
   factory TracksLink.fromJson(Map<String, dynamic> json) =>
       _$TracksLinkFromJson(json);
 
+  Map<String, dynamic> toJson() => _$TracksLinkToJson(this);
+
   /// A link to the Web API endpoint where full details of the playlist's
   /// tracks can be retrieved
   String? href;
 
   /// Total number of tracks in the playlist
+  @JsonKey(fromJson: convertToIntIfDoubleValue)
   int? total;
 }

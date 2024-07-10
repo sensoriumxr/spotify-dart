@@ -1,5 +1,110 @@
 # Changelog
 
+## 0.13.7
+
+- add filter function for playlist endpoint to prevent deserialization of tracks that are `null` 
+
+## 0.13.6+1
+
+- fix serialization issue
+
+## 0.13.6
+
+- add convenience `toJson` method for all serializable models
+
+## 0.13.5
+
+- fix scope name for user profile
+
+## 0.13.4
+
+- fix null objects being sent as empty string to the Spotify API
+
+## 0.13.3
+
+- fix double/int serialization woes
+
+## 0.13.2
+
+- add codeVerifier for oauth flow
+- add method to expand spotify's shortened URLs 
+  - e.g. `await spotify.expandLink('https://spotify.link/hRkBrwub9xb')`
+
+## 0.13.1
+
+- fix empty playbackState returning 404
+
+## 0.13.0
+
+- fix unknown devices bug
+- add tracks restriction on playlist items
+- deprecate `startOrResume` in favor of starting with tracks or context and a new resume method
+- fix spotify floating point bug on integer fields (temp)
+
+## 0.12.0
+
+- improve authorization scope handling
+- add audio analysis endpoint
+- add transfer playback endpoint
+- improve usage of Market throughout exposed library code
+- upgrade dependencies and enable Dart SDK 3.0 compatibility
+
+## 0.11.0
+
+- remove deprecated library entrypoints
+- add/fix doc comments
+- add v1/playlists/$playlistId/tracks related methods
+
+## 0.10.0
+
+- add more documentation
+- refactor library organization
+- add episodes methods to `me` endpoint
+- add episodes endpoint
+- add player methods for controlling playback
+- refactor player methods out of `me` endpoint
+
+## 0.9.1
+
+- bump dependency versions
+- regenerate serialization models
+
+## 0.9.0
+
+- add new-releases endpoint
+- add queue endpoints for retrieving and adding
+- fix nullability and static analysis issues
+- fix search endpoint and examples
+- add shows related endpoints
+- deprecate `isSavedAlbums` and prefer usage of `containsSavedAlbums`
+
+## 0.8.0
+
+- add playlists endpoint for specific users
+- add distinct cursor and offset paging classes
+
+## 0.7.3
+
+- fix `isLast` in paging endpoint
+
+## 0.7.2
+
+- add update playlist endpoint
+- add docs for serverside auth token refresh
+
+## 0.7.1
+
+- several bug fixes
+- add async factory for `SpotifyApi`
+- add follow/unfollow artists and users endpoints
+- add inserting track in playlist endpoint
+- add remove tracks endpoint
+
+## 0.7.0
+
+- create client with access token only
+- add description field to playlist model
+
 ## 0.6.0
 
 - fix following artist

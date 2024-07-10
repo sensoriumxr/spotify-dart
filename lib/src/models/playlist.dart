@@ -1,21 +1,25 @@
 // Copyright (c) 2017, chances. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a playlist
+@JsonSerializable()
 class Playlist extends Object implements PlaylistSimple {
   Playlist();
 
   factory Playlist.fromJson(Map<String, dynamic> json) =>
       _$PlaylistFromJson(json);
 
+  @override
+  Map<String, dynamic> toJson() => _$PlaylistToJson(this);
+
   /// true if the owner allows other users to modify the playlist.
   @override
   bool? collaborative;
 
   /// The playlist description. Only returned for modified, verified playlists,
-  /// otherwise [null].
+  /// otherwise `null`.
   @override
   String? description;
 
@@ -52,8 +56,8 @@ class Playlist extends Object implements PlaylistSimple {
   @override
   User? owner;
 
-  /// The playlist's public/private status: [true] the playlist is public,
-  /// [false] the playlist is private, null the playlist status is not relevant.
+  /// The playlist's public/private status: `true` the playlist is public,
+  /// `false` the playlist is private, null the playlist status is not relevant.
   /// For more about public/private status, see Working with Playlists.
   @override
   bool? public;
@@ -66,7 +70,7 @@ class Playlist extends Object implements PlaylistSimple {
 
   /// Use [Playlist.tracks]
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   TracksLink? tracksLink;
 
   /// Information about the tracks of the playlist.
@@ -81,18 +85,21 @@ class Playlist extends Object implements PlaylistSimple {
   String? uri;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a simplified playlist
+@JsonSerializable()
 class PlaylistSimple extends Object {
   PlaylistSimple();
 
   factory PlaylistSimple.fromJson(Map<String, dynamic> json) =>
       _$PlaylistSimpleFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PlaylistSimpleToJson(this);
+
   /// true if the owner allows other users to modify the playlist.
   bool? collaborative;
 
   /// The playlist description. Only returned for modified, verified playlists,
-  /// otherwise [null].
+  /// otherwise `null`.
   String? description;
 
   /// Known external URLs for this playlist.
@@ -119,8 +126,8 @@ class PlaylistSimple extends Object {
   /// The user who owns the playlist
   User? owner;
 
-  /// The playlist's public/private status: [true] the playlist is public,
-  /// [false] the playlist is private, null the playlist status is not relevant.
+  /// The playlist's public/private status: `true` the playlist is public,
+  /// `false` the playlist is private, null the playlist status is not relevant.
   /// For more about public/private status, see Working with Playlists.
   bool? public;
 
@@ -142,31 +149,37 @@ class PlaylistSimple extends Object {
   String? uri;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a featured playlist. Used as a wrapper object.
+@JsonSerializable()
 class PlaylistsFeatured extends Object {
   PlaylistsFeatured();
 
   factory PlaylistsFeatured.fromJson(Map<String, dynamic> json) =>
       _$PlaylistsFeaturedFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PlaylistsFeaturedToJson(this);
+
   /// The message of the day for Spotify's featured playlists
   String? message;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a playlist with a single track
+@JsonSerializable()
 class PlaylistTrack extends Object {
   PlaylistTrack();
 
   factory PlaylistTrack.fromJson(Map<String, dynamic> json) =>
       _$PlaylistTrackFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PlaylistTrackToJson(this);
+
   /// The date and time the track was added.
-  /// Note that some very old playlists may return [null] in this field.
+  /// Note that some very old playlists may return `null` in this field.
   @JsonKey(name: 'added_at')
   DateTime? addedAt;
 
   /// The Spotify user who added the track.
-  /// Note that some very old playlists may return [null] in this field.
+  /// Note that some very old playlists may return `null` in this field.
   @JsonKey(name: 'added_by')
   UserPublic? addedBy;
 

@@ -1,13 +1,17 @@
 // Copyright (c) 2017, rinukkusu. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of an album
+@JsonSerializable()
 class Album extends AlbumSimple {
   Album();
 
   factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$AlbumToJson(this);
 
   /// The copyright statements of the album.
   List<Copyright>? copyrights;
@@ -29,20 +33,27 @@ class Album extends AlbumSimple {
   /// The popularity of the artist. The value will be between 0 and 100, with 100
   /// being the most popular. The artist's popularity is calculated from the
   /// popularity of all the artist's tracks.
+  @JsonKey(fromJson: convertToIntIfDoubleValue)
   int? popularity;
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class AlbumSimple extends Object {
   AlbumSimple();
 
   factory AlbumSimple.fromJson(Map<String, dynamic> json) =>
       _$AlbumSimpleFromJson(json);
 
+  Map<String, dynamic> toJson() => _$AlbumSimpleToJson(this);
+
   /// Helper function that unwraps the items from the paging object.
-  static Iterable<TrackSimple> _extractTracksFromPage(dynamic? json) {
+  static Iterable<TrackSimple> _extractTracksFromPage(dynamic json) {
     if (json == null) {
       return [];
+    }
+
+    if (json is List) {
+      return json.map((trackJson) => TrackSimple.fromJson(trackJson));
     }
 
     var items = Paging.fromJson(json).itemsNative;
@@ -51,9 +62,13 @@ class AlbumSimple extends Object {
         : items.map((trackJson) => TrackSimple.fromJson(trackJson));
   }
 
+  static AlbumType? _convertForAlbumType(String? json) {
+    return AlbumType.values.asNameMap()[json?.toLowerCase()];
+  }
+
   /// The type of the album: one of "album", "single", or "compilation".
-  @JsonKey(name: 'album_type')
-  String? albumType;
+  @JsonKey(name: 'album_type', fromJson: _convertForAlbumType)
+  AlbumType? albumType;
 
   /// The artists of the album. Each artist object includes a link in href to
   /// more detailed information about the artist.
@@ -63,7 +78,7 @@ class AlbumSimple extends Object {
   /// codes. Note that an album is considered available in a market when at least
   /// 1 of its tracks is available in that market.
   @JsonKey(name: 'available_markets')
-  List<String>? availableMarkets;
+  List<Market>? availableMarkets;
 
   /// Known external URLs for this album.
   @JsonKey(name: 'external_urls')
@@ -104,3 +119,5 @@ class AlbumSimple extends Object {
 }
 
 enum DatePrecision { day, month, year }
+
+enum AlbumType { album, single, compilation }

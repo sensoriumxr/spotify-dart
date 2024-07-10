@@ -1,13 +1,17 @@
 // Copyright (c) 2017, chances. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a user
+@JsonSerializable()
 class User extends Object implements UserPublic {
   User();
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
   /// The user's date-of-birth.
   ///
@@ -18,7 +22,7 @@ class User extends Object implements UserPublic {
   /// The country of the user, as set in the user's account profile. An
   /// ISO 3166-1 alpha-2 country code. This field is only available when the
   /// current user has granted access to the user-read-private scope.
-  String? country;
+  Market? country;
 
   /// The name displayed on the user's profile. null if not available.
   @JsonKey(name: 'display_name')
@@ -71,12 +75,15 @@ class User extends Object implements UserPublic {
   String? uri;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a publicly displayed user
+@JsonSerializable()
 class UserPublic extends Object {
   UserPublic();
 
   factory UserPublic.fromJson(Map<String, dynamic> json) =>
       _$UserPublicFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserPublicToJson(this);
 
   /// The name displayed on the user's profile. null if not available.
   @JsonKey(name: 'display_name')
@@ -105,12 +112,15 @@ class UserPublic extends Object {
   String? uri;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of the playback history
+@JsonSerializable()
 class PlayHistory extends Object {
   PlayHistory();
 
   factory PlayHistory.fromJson(Map<String, dynamic> json) =>
       _$PlayHistoryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlayHistoryToJson(this);
 
   /// The track the user listened to.
   TrackSimple? track;

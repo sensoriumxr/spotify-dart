@@ -1,15 +1,16 @@
 // Copyright (c) 2017, rinukkusu. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of an episode
+@JsonSerializable()
 class Episode extends Object {
   Episode();
 
   /// The episode length in milliseconds.
   /// A URL to a 30 second preview (MP3 format) of the episode.
-  /// [null] if not available.
+  /// `null` if not available.
   @JsonKey(name: 'audio_preview_url')
   String? audioPreviewUrl;
 
@@ -17,11 +18,11 @@ class Episode extends Object {
   String? description;
 
   /// The episode length in milliseconds.
-  @JsonKey(name: 'duration_ms')
+  @JsonKey(name: 'duration_ms', fromJson: convertToIntIfDoubleValue)
   int? durationMs;
 
   /// Whether or not the episode has explicit content
-  /// (true = yes it does; false = no it does not OR unknown).
+  /// (`true` = yes it does; `false` = no it does not OR unknown).
   bool? explicit;
 
   /// Known external URLs for this episode.
@@ -74,4 +75,20 @@ class Episode extends Object {
 
   factory Episode.fromJson(Map<String, dynamic> json) =>
       _$EpisodeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EpisodeToJson(this);
+}
+
+/// Json representation of an episode with information about its show
+@JsonSerializable()
+class EpisodeFull extends Episode {
+  EpisodeFull();
+
+  Show? show;
+
+  factory EpisodeFull.fromJson(Map<String, dynamic> json) =>
+      _$EpisodeFullFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$EpisodeFullToJson(this);
 }

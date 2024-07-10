@@ -1,6 +1,8 @@
 // Copyright (c) 2017, 2020 rinukkusu, hayribakici. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:io';
 import 'dart:convert';
 import 'package:spotify/spotify.dart';
@@ -12,18 +14,27 @@ void main() async {
   var credentials = SpotifyApiCredentials(keyMap['id'], keyMap['secret']);
   var spotify = SpotifyApi(credentials);
 
+  print('\nExpannd shortened spotify link of https://spotify.link/hRkBrwub9xb');
+  var longLink = await spotify.expandLink('https://spotify.link/hRkBrwub9xb');
+  print(longLink);
+
   print('\nPodcast:');
-  var podcast = await spotify.shows.get('4AlxqGkkrqe0mfIx3Mi7Xt');
-  print(podcast.name);
+  await spotify.shows
+      .get('4rOoJ6Egrf8K2IrywzwOMk')
+      .then((podcast) => print(podcast.name))
+      .onError(
+          (error, stackTrace) => print((error as SpotifyException).message));
 
   print('\nPodcast episode:');
-  var episodes = await spotify.shows.episodes('4AlxqGkkrqe0mfIx3Mi7Xt');
-  var firstEpisode = (await episodes.first()).items!.first;
-  print(firstEpisode.name);
+  var episodes = spotify.shows.episodes('4AlxqGkkrqe0mfIx3Mi7Xt');
+  await episodes.first().then((first) => print(first.items!.first)).onError(
+      (error, stackTrace) => print((error as SpotifyException).message));
 
-  print('Artists:');
+  print('\nArtists:');
   var artists = await spotify.artists.list(['0OdUWJ0sBjDrqHygGUXeCF']);
-  artists.forEach((x) => print(x.name));
+  for (var x in artists) {
+    print(x.name);
+  }
 
   print('\nAlbum:');
   var album = await spotify.albums.get('2Hog1V8mdTWKhCYqI5paph');
@@ -31,26 +42,38 @@ void main() async {
 
   print('\nAlbum Tracks:');
   var tracks = await spotify.albums.getTracks(album.id!).all();
-  tracks.forEach((track) {
+  for (var track in tracks) {
     print(track.name);
-  });
+  }
+
+  print('\nNew Releases');
+  var newReleases = await spotify.browse.getNewReleases().first();
+  for (var album in newReleases.items!) {
+    print(album.name);
+  }
 
   print('\nFeatured Playlist:');
   var featuredPlaylists = await spotify.playlists.featured.all();
-  featuredPlaylists.forEach((playlist) {
+  for (var playlist in featuredPlaylists) {
     print(playlist.name);
-  });
-
-  print("\nSearching for \'Metallica\':");
-  var search = await spotify.search
-      .get('metallica')
-      .first(2)
-      .catchError((err) => print((err as SpotifyException).message));
-  if (search == null) {
-    return;
   }
-  search.forEach((pages) {
-    pages.items!.forEach((item) {
+
+  print('\nUser\'s playlists:');
+  var usersPlaylists =
+      await spotify.playlists.getUsersPlaylists('superinteressante').all();
+  for (var playlist in usersPlaylists) {
+    print(playlist.name);
+  }
+
+  print("\nSearching for 'Metallica':");
+  var search = await spotify.search.get('metallica').first(2);
+
+  for (var pages in search) {
+    if (pages.items == null) {
+      print('Empty items');
+    }
+
+    for (var item in pages.items!) {
       if (item is PlaylistSimple) {
         print('Playlist: \n'
             'id: ${item.id}\n'
@@ -73,9 +96,10 @@ void main() async {
             'href: ${item.href}\n'
             'type: ${item.type}\n'
             'uri: ${item.uri}\n'
+            'popularity: ${item.popularity}\n'
             '-------------------------------');
       }
-      if (item is TrackSimple) {
+      if (item is Track) {
         print('Track:\n'
             'id: ${item.id}\n'
             'name: ${item.name}\n'
@@ -88,6 +112,7 @@ void main() async {
             'discNumber: ${item.discNumber}\n'
             'trackNumber: ${item.trackNumber}\n'
             'explicit: ${item.explicit}\n'
+            'popularity: ${item.popularity}\n'
             '-------------------------------');
       }
       if (item is AlbumSimple) {
@@ -105,8 +130,8 @@ void main() async {
             'releaseDatePrecision: ${item.releaseDatePrecision}\n'
             '-------------------------------');
       }
-    });
-  });
+    }
+  }
 
   var relatedArtists =
       await spotify.artists.relatedArtists('0OdUWJ0sBjDrqHygGUXeCF');

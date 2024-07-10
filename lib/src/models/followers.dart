@@ -1,14 +1,17 @@
 // Copyright (c) 2017, rinukkusu. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of followers
+@JsonSerializable()
 class Followers extends Object {
   Followers();
 
   factory Followers.fromJson(Map<String, dynamic> json) =>
       _$FollowersFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FollowersToJson(this);
 
   /// A link to the Web API endpoint providing full details of the followers;
   /// null if not available.
@@ -18,5 +21,6 @@ class Followers extends Object {
   String? href;
 
   /// The total number of followers.
+  @JsonKey(fromJson: convertToIntIfDoubleValue)
   int? total;
 }

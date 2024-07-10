@@ -1,13 +1,17 @@
 // Copyright (c) 2017, rinukkusu. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of spotify.models;
+part of '_models.dart';
 
-@JsonSerializable(createToJson: false)
+/// Json representation of an artist
+@JsonSerializable()
 class Artist extends Object implements ArtistSimple {
   Artist();
 
   factory Artist.fromJson(Map<String, dynamic> json) => _$ArtistFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ArtistToJson(this);
 
   /// Known external URLs for this artist.
   @JsonKey(name: 'external_urls')
@@ -50,15 +54,19 @@ class Artist extends Object implements ArtistSimple {
   /// The popularity of the artist. The value will be between 0 and 100, with 100
   /// being the most popular. The artist's popularity is calculated from the
   /// popularity of all the artist's tracks.
+  @JsonKey(fromJson: convertToIntIfDoubleValue)
   int? popularity;
 }
 
-@JsonSerializable(createToJson: false)
+/// Json representation of a simplified artist
+@JsonSerializable()
 class ArtistSimple extends Object {
   ArtistSimple();
 
   factory ArtistSimple.fromJson(Map<String, dynamic> json) =>
       _$ArtistSimpleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ArtistSimpleToJson(this);
 
   /// Known external URLs for this artist.
   @JsonKey(name: 'external_urls')
